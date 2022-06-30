@@ -1,0 +1,131 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://paveltinnik.com/demosoap"
+           targetNamespace="http://paveltinnik.com/demosoap"
+           elementFormDefault="qualified">
+
+    <!-- определение простых элементов -->
+    <xs:simpleType name="stringtype">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="userNameType">
+        <xs:restriction base="tns:stringtype"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="userLoginType">
+        <xs:restriction base="tns:stringtype"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="userPasswordType">
+        <xs:restriction base="tns:stringtype">
+            <xs:pattern value=".*(([A-Z].*[0-9])|([0-9].*[A-Z])).*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="roleNameType">
+        <xs:restriction base="tns:stringtype"/>
+    </xs:simpleType>
+
+    <!-- определение составных элементов -->
+    <xs:complexType name="userType">
+        <xs:sequence>
+            <xs:element name="login" type="tns:userLoginType"/>
+            <xs:element name="name" type="tns:userNameType"/>
+            <xs:element name="password" type="tns:userPasswordType"/>
+            <xs:element name="roles" type="tns:rolesType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="rolesType">
+        <xs:sequence>
+            <xs:element name="name" type="tns:roleNameType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- определение запросов и ответов -->
+    <xs:element name="getAllUsersRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="getAllUsersResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userType" type="tns:userType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getUserByLoginRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userLogin" type="tns:userLoginType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getUserByLoginResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userType" type="tns:userType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userType" type="tns:userType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userType" type="tns:userType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userLogin" type="tns:userLoginType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="serviceStatus">
+        <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            <xs:element name="errors" type="tns:stringtype" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
